@@ -17,10 +17,10 @@ public class CalcServiceTest extends TestCase {
 		int result = calcServ.add(a, b);
 		assertTrue(result == 8);
 	}
-	
+/*	
 	public void testAdd2() {
 		CalcService calcServ = new CalcService();
 		int result = calcServ.add(a, b);
 		assertTrue(result == 5);
-	}
+	}*/
 }
