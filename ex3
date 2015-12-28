@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<style>
+body {
+	padding-top: 10px;
+	background-color: #F5F5F5;
+}
+</style>
+
+</head>
+
+<body ng-app="docsSimpleDirective" ng-controller="custDirectCtrl"
+	class="container">
+	<a href="/">Home</a>
+	<h3 class="page-header" style="border-bottom: 1px solid maroon">Custom
+		Directives</h3>
+	<ol>
+		<li>Custom directives used to decorate the HTML elements using compile function</li>
+	</ol>
+	<hr
+		style="display: block; height: 1px; border: 0; border-top: 1px solid maroon; margin: 1em 0; padding: 0;" />
+	<div>
+		<table class='table'>
+			<tr>
+				<th>Project</th>
+				<th>Status</th>
+			</tr>
+			<tr>
+				<td>Gmail</td>
+				<td><svg>
+					<circle projstatus="in-progress" />
+					</svg></td>
+			</tr>
+			<tr>
+				<td>hangout</td>
+				<td><svg>
+					<circle projstatus="success" />
+					</svg></td>
+			</tr>
+			<tr>
+				<td>Orkut</td>
+				<td><svg>
+					<circle projstatus="failed" />
+					</svg></td>
+			</tr>
+		</table>
+	</div>
+
+	<script
+		src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular.min.js"></script>
+	<!-- One way and 2 way binding binding between parent scope and isolated scope -->
+	<script>
+		angular.module('docsSimpleDirective', []).controller('custDirectCtrl',
+				[ '$scope', function($scope) {
+				} ]).directive('circle', function() {
+			return {
+				restrict : 'E',
+				compile : function(element, attributes) {
+
+					element.attr('cx', '15');
+					element.attr('cy', '15');
+					element.attr('r', '10');
+					element.attr('stroke', 'green');
+					element.attr('stroke-width', '1');
+
+					if (attributes.projstatus === 'in-progress') {
+						element.attr('fill', 'yellow');
+					} else if (attributes.projstatus === 'success') {
+						element.attr('fill', 'green');
+					} else if (attributes.projstatus === 'failed') {
+						element.attr('fill', 'red');
+					} else {
+						element.attr('fill', 'black');
+					}
+				}
+			};
+		}).directive('svg', function() {
+			return {
+				restrict : 'E',
+				compile : function(element, attributes) {
+					element.attr('width', '30');
+					element.attr('height', '30');
+				}
+			};
+		});
+	</script>
+</body>
+</html>
