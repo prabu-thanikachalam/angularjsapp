@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<style>
+body {
+	padding-top: 10px;
+	background-color: #F5F5F5;
+}
+</style>
+
+</head>
+
+</head>
+<body ng-controller="defaultCtrl" ng-app="bootCampApp" class="container">
+	<a href="/">Home</a>
+	<h3 class="page-header" style="border-bottom: 1px solid maroon">Custom
+		Directives - Transclusion</h3>
+	<ol>
+		<li>Transclusion using compile, watch and Transclude Function</li>
+	</ol>
+	<hr
+		style="display: block; height: 1px; border: 0; border-top: 1px solid maroon; margin: 1em 0; padding: 0;" />
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Price</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr mockng-repeater source="softwares" item-name="item">
+				<td>{{item.name}}</td>
+				<td>{{item.price | currency}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<input type="text" ng-model="nameinput">&nbsp;
+	<input type="number" ng-model="priceinput">&nbsp;
+	<button class="btn btn-default text" ng-click="updateData()">Add</button>
+	<script
+		src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular.min.js"></script>
+	<script type="text/javascript">
+		angular.module("bootCampApp", []).controller("defaultCtrl",
+				function($scope) {
+					$scope.nameinput;
+					$scope.priceinput;
+					$scope.softwares = [ {
+						name : 'IBM Bluemix',
+						price : 1400
+					}, {
+						name : 'Bamboo CI Tool',
+						price : 2560
+					} ];
+
+					$scope.updateData = function() {
+						$scope.softwares.push({
+							name : $scope.nameinput,
+							price : $scope.priceinput
+						});
+					}
+				}).directive("mockngRepeater", function() {
+			return {
+				scope : {
+					data : "=source",
+					propName : "@itemName"
+				},
+				transclude : 'element',
+				compile : function(element, attrs, transcludeFn) {
+					return function($scope, $element, $attr) {
+						$scope.$watch("data.length", function() {
+							var parent = $element.parent();
+							parent.children().remove();
+							for (var i = 0; i < $scope.data.length; i++) {
+								var childScope = $scope.$new();
+								childScope[$scope.propName] = $scope.data[i];
+								transcludeFn(childScope, function(clone) {
+									parent.append(clone);
+								});
+							}
+						});
+					}
+				}
+			}
+		});
+	</script>
+</body>
+
+</html>
