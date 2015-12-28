@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script
+	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<style>
+body {
+	padding-top: 10px;
+	background-color: #F5F5F5;
+}
+</style>
+</head>
+<body>
+	<div ng-app="filterApp" ng-controller="filterController"
+		class="container">
+		<a href="/">Home</a>
+		<h1 class="page-header" style="border-bottom: 1px solid maroon">Custom
+			Filter</h1>
+		<ol>
+			<li>How to use custom filter in ng-repeat</li>
+
+		</ol>
+		<hr
+			style="display: block; height: 1px; border: 0; border-top: 1px solid maroon; margin: 1em 0; padding: 0;" />
+		<label>Search criteria: <select ng-model="excludeCriteria">
+				<option value="name">Name</option>
+				<option value="age">Age</option>
+				<option value="role">Role</option>
+		</select></label>&nbsp;<label
+			ng-show="excludeCriteria ==='name' || excludeCriteria ==='role'  ">Search
+			Condition: <select ng-model="excludeCriteriaCnd"
+			ng-show="excludeCriteria ==='name' || excludeCriteria ==='role' ">
+				<option value="11">contains</option>
+				<option value="12">equals</option>
+				<option value="13">not equals</option>
+		</select>
+		</label> &nbsp;<label ng-show="excludeCriteria ==='age'">Search
+			Condition: <select ng-model="excludeCriteriaCnd"
+			ng-show="excludeCriteria ==='age'">
+				<option value="14">equals</option>
+				<option value="15">greater than</option>
+				<option value="16">lesser than</option>
+		</select>
+		</label>&nbsp;<label>Search Input: <input
+			ng-model="excludeCriteriaVal">
+		</label>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Age</th>
+					<th>Role</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr
+					ng-repeat="userdtls in userdetails | myCustomFilter : excludeCriteria : excludeCriteriaCnd : excludeCriteriaVal">
+					<td>{{userdtls.name}}</td>
+					<td>{{userdtls.age}}</td>
+					<td>{{userdtls.role}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<script>
+		var app = angular.module('filterApp', []).filter(
+				"myCustomFilter",
+				function($filter) {
+					return function(inputArray, searchCriteria, searchRule,
+							searchVal) {
+						if (!angular.isDefined(searchCriteria)
+								|| searchCriteria == ''
+								|| !angular.isDefined(searchVal)
+								|| searchVal == ''
+								|| !angular.isDefined(searchRule)
+								|| searchRule == '') {
+							return inputArray;
+						}
+						var data = [];
+						angular.forEach(inputArray, function(itemVal) {
+							if (searchCriteria == 'name') {
+								if (searchRule == '11') {
+									if (itemVal.name.toLowerCase().indexOf(
+											searchVal.toLowerCase()) != -1) {
+										data.push(itemVal);
+									}
+								}
+								if (searchRule == '12') {
+									if (itemVal.name == searchVal) {
+										data.push(itemVal);
+									}
+								}
+
+								if (searchRule == '13') {
+									if (itemVal.name != searchVal) {
+										data.push(itemVal);
+									}
+								}
+							}
+							if (searchCriteria == 'age') {
+
+								if (searchRule == '14') {
+									if (itemVal.age == searchVal) {
+										data.push(itemVal);
+									}
+								}
+								if (searchRule == '15') {
+									if (itemVal.age > searchVal) {
+										data.push(itemVal);
+									}
+								}
+
+								if (searchRule == '16') {
+									if (itemVal.age < searchVal) {
+										data.push(itemVal);
+									}
+								}
+							}
+							if (searchCriteria == 'role') {
+								if (searchRule == '11') {
+									if (itemVal.role.toLowerCase().indexOf(
+											searchVal.toLowerCase()) != -1) {
+										data.push(itemVal);
+									}
+								}
+								if (searchRule == '12') {
+									if (itemVal.role == searchVal) {
+										data.push(itemVal);
+									}
+								}
+
+								if (searchRule == '13') {
+									if (itemVal.role != searchVal) {
+										data.push(itemVal);
+									}
+								}
+							}
+
+						});
+						return data;
+					};
+				});
+
+		app.controller('filterController', function($scope) {
+			$scope.excludeCriteria = "";
+			$scope.excludeCriteriaVal = "";
+			$scope.userdetails = [ {
+				name : 'John',
+				age : 40,
+				role : 'Team Lead'
+			}, {
+				name : 'Peter',
+				age : 32,
+				role : 'Team Lead'
+			}, {
+				name : 'Mohammed',
+				age : 45,
+				role : 'Manager'
+			}, {
+				name : 'Pravin',
+				age : 33,
+				role : 'Architect'
+			}, {
+				name : 'Satish',
+				age : 41,
+				role : 'Team Lead'
+			}, {
+				name : 'Patty',
+				age : 55,
+				role : 'Vice President'
+			} ];
+
+			$scope.myCustomFilter = function(value, index, array) {
+				if ($scope.excludeCriteria == 'name') {
+					return value.name == $scope.excludeCriteriaVal ? false
+							: true;
+				}
+				if ($scope.excludeCriteria == 'age') {
+					return value.age == $scope.excludeCriteriaVal ? false
+							: true;
+				}
+				if ($scope.excludeCriteria == 'role') {
+					return value.role == $scope.excludeCriteriaVal ? false
+							: true;
+				} else {
+					return true;
+				}
+			}
+		});
+	</script>
+</body>
+</html>
+
