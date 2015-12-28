@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<style>
+body {
+	padding-top: 10px;
+	background-color: #F5F5F5;
+}
+</style>
+
+</head>
+
+<body ng-app="bootCampApp" ng-controller="Controller"
+	class="container">
+	<a href="/">Home</a>
+	<h3 class="page-header" style="border-bottom: 1px solid maroon">Custom
+		Directives - (Binding between Parent Scope and isolated Scope)</h3>
+	<ol>
+
+		<li>How to use Custom Directives for one way binding between
+			Parent and isolated scope</li>
+		<li>How to use Custom Directives for two way binding between
+			Parent and isolated scope</li>
+		<li>How to use Custom Directives for updating data in parent
+			scope by using $watch function and invoking the function in parent
+			scope</li>
+	</ol>
+	<hr
+		style="display: block; height: 1px; border: 0; border-top: 1px solid maroon; margin: 1em 0; padding: 0;" />
+	<div>
+		<b>Parent Scope</b><br /> <br /> 
+		
+		Name:<input type="text" ng_model="customer.name" />&nbsp; 
+		Address:<input type="text" ng_model="customer.address" /><br /> <br /> 
+		
+		<b>Custom Directive1 Scope (using Parent Scope)</b><br /> <br />&nbsp;
+		<my-customdir1></my-customdir1><br /> <br /> 
+		
+		<b>Custom Directive2 Scope (One way data binding with Isolated Scope)</b><br /> <br />
+		<my-customdir2 	custname-attr="{{customer.name}}"
+						custaddr-attr="{{customer.address}}"></my-customdir2>						
+		<br /> <br /> 
+		
+		<b>Custom Directive3 Scope (Two way data binding with Isolated Scope)</b><br /> <br />&nbsp;
+		<my-customdir3 customerobj="customer"></my-customdir3>
+		<br /> <br /> 
+		
+		<b>Custom Directive2 Scope (updating data in
+			parent scope by using $watch function and invoking the function in
+			parent scope)</b><br /> <br />
+		<my-customdir2 	custname-attr="{{customer.name}}"
+						custaddr-attr="{{customer.address}}"
+						updateinfo-attr="updateData(arg1,arg2)"></my-customdir2>
+		<br /> <br />
+		
+	</div>
+
+	<script
+		src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular.min.js"></script>
+	<!-- One way and 2 way binding binding between parent scope and isolated scope -->
+	<script>
+		angular
+				.module('bootCampApp', [])
+				.controller('Controller', [ '$scope', function($scope) {
+					$scope.customer = {
+						name : 'Infosys',
+						address : 'Electronic City'
+					};
+					$scope.updateData = function(varname, varaddress) {
+						$scope.customer.name = varname;
+						$scope.customer.address = varaddress;
+					};
+				} ])
+				.directive(
+						'myCustomdir1',
+						function() {
+							return {
+								template : 'Name: {{customer.name}} &nbsp; Address: {{customer.address}}'
+							};
+						})
+				.directive(
+						'myCustomdir2',
+						function() {
+							return {
+								scope : {
+									customername : '@custnameAttr',
+									customeraddr : '@custaddrAttr',
+									updateCustInf : '&updateinfoAttr'
+								},
+								template : 'Name:&nbsp;<input type="text" ng_model="customername"/>&nbsp;Address:&nbsp;<input type="text" ng_model="customeraddr"/>',
+								link : function(scope, elem, attrs) {
+									scope.$watch('customername',
+											function(value) {
+												scope.updateCustInf({
+													arg1 : scope.customername,
+													arg2 : scope.customeraddr
+												});
+											});
+									scope.$watch('customeraddr',
+											function(value) {
+												scope.updateCustInf({
+													arg1 : scope.customername,
+													arg2 : scope.customeraddr
+												});
+											});
+								}
+							};
+						})
+				.directive(
+						'myCustomdir3',
+						function() {
+							return {
+								scope : {
+									customerobj : '='
+								},
+								template : 'Name:&nbsp;<input type="text" ng_model="customerobj.name"/>&nbsp;Address:&nbsp;<input type="text" ng_model="customerobj.address"/>'
+							};
+						});
+	</script>
+</body>
+</html>
