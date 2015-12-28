@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<style>
+body {
+	padding-top: 10px;
+	background-color: #F5F5F5;
+}
+</style>
+
+</head>
+
+</head>
+<body ng-controller="defaultCtrl" ng-app="bootCampApp" class="container">
+	<a href="/">Home</a>
+	<h3 class="page-header" style="border-bottom: 1px solid maroon">Custom
+		Directives- DOM Manipulation</h3>
+	<ol>
+		<li>Generating HTML elements using custom directive</li>
+		<li>Evaluating angular expression during HTML element creation</li>
+		<li>Event handling in custom directive</li>
+	</ol>
+	<hr
+		style="display: block; height: 1px; border: 0; border-top: 1px solid maroon; margin: 1em 0; padding: 0;" />
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<b>Generating HTML elements  and Event Handling </b>
+		</div>
+		<div class="panel-body">
+			<div algorithm-steps="dockerinstall"><button>Execute</button></div>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<b>Evaluating Expression</b>
+		</div>
+		<div class="panel-body">
+			<div custdirective2="softwarelist" col1="name | uppercase"
+				col2="price | currency"></div>
+		</div>
+	</div>
+	<script
+		src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular.min.js"></script>
+	<!-- One way and 2 way binding binding between parent scope and isolated scope -->
+	<script>
+		angular.module("bootCampApp", []).directive(
+				"algorithmSteps",
+				function() {
+					return function(scope, element, attrs) {
+						var data = scope[attrs["algorithmSteps"]];
+						if (angular.isArray(data)) {
+							var listElem = angular.element("<div>");
+							element.append(listElem);
+							for (var i = 0; i < data.length; i++) {
+								listElem.append(angular.element('<b>').text(
+										'Step ' + (i + 1) + ': '));
+								listElem.append(angular.element('<span>').text(
+										data[i]));
+								listElem.append(angular.element('<br>'));
+							}
+						}
+						var buttons = element.find("button");
+						buttons.on("click", function(e) {
+							element.find("span").html("All Steps executed !!!");
+						});
+					}
+				}).directive(
+				"custdirective2",
+				function() {
+					return function(scope, element, attrs) {
+						var data = scope[attrs["custdirective2"]];
+						var col1 = attrs["col1"];
+						var col2 = attrs["col2"];
+						if (angular.isArray(data)) {
+							var listElem = angular.element("<table>");
+							listElem.addClass("table");
+							listElem.append(angular.element('<tr>'));
+							listElem.append(angular.element('<th>').text(
+									'Software'));
+							listElem.append(angular.element('<th>').text(
+									'Price'));
+							element.append(listElem);
+							for (var i = 0; i < data.length; i++) {
+								listElem.append(angular.element('<tr>'));
+								listElem.append(angular.element('<td>').text(
+										scope.$eval(col1, data[i])));
+								listElem.append(angular.element('<td>').text(
+										scope.$eval(col2, data[i])));
+							}
+						}
+					}
+				}).controller(
+				"defaultCtrl",
+				function($scope) {
+					$scope.dockerinstall = [ 'Check your version',
+							'Install Docker Toolbox',
+							'Verify your installation' ];
+					$scope.softwarelist = [ {
+						name : 'IBM Bluemix',
+						price : 1400
+					}, {
+						name : 'Bamboo CI Tool',
+						price : 2560
+					} ];
+				})
+	</script>
+</body>
+
+</html>
