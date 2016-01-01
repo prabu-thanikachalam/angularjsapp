@@ -1,0 +1,55 @@
+# Required metadata
+sonar.projectKey=AngularJS
+sonar.projectName=Simple Java project analyzed with the SonarQube Runner
+sonar.projectVersion=1.0
+
+# Comma-separated paths to directories with sources (required)
+sonar.sources=src
+
+# Language
+sonar.language=java
+
+# Encoding of the source files
+sonar.sourceEncoding=UTF-8
+
+Matching Directives
+Angular's HTML compiler determines when to use a given directive.
+When an element matches a selector, we say an element matches a directive when the directive is part of its declaration.
+In the following example
+<input> element matches the ngModel directive
+Following element matches the person directive
+<person>{{name}}</person>
+Normalization
+Angular normalizes an element's tag and attribute name to determine which elements match which directives. The normalization process is as follows:
+Strip x- and data- from the front of the element/attributes.
+Convert the :, -, or _-delimited name to camelCase
+Directive types
+$compile service can match directives based on element names, attributes, class names, as well as comments.
+All of the Angular-provided directives match attribute name, tag name, comments, or class name. 
+During the compilation process the compiler matches text and attributes using the $interpolate service to see if they contain embedded expressions.
+The following demonstrates the various ways a directive (myDir in this case) can be referenced from within a template:
+What are custom directives
+Functions written by users to create new HTML tags, attributes or class
+Secret sauce of Angular 
+Expressiveness is the real power of writing custom directives
+Why Custom directives
+You need to manipulate the DOM directly, such as with Jquery
+You want to refactor parts of your application to remove repeated codes
+You want to create new HTML mark-up for non-developers to use, such as designers
+
+When to use Custom Directive
+Almost any time you need to interface with the DOM.
+If we want a re-usable HTML component or for complex UI expressions 
+If you want reusable HTML behavior like events handlers 
+If you want to wrap a jQuery plugin 
+
+How to Define Custom Directive
+Each directive must be registered with a module.
+A directive definition is an object whose fields tell the compiler what the directive does.
+To register a directive, you use the module.directive API.
+module.directive takes the normalized directive name followed by a factory function.
+This factory function returns an object with the different options to tell $compile how the directive should behave when matched.
+The factory function is invoked only once when the compiler matches the directive for the first time. 
+The function is invoked using $injector.invoke which makes it injectable just like a controller.
+ Factory function initializes the directive and add the behavior to the directive
+
