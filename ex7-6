@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="bootCampApp">
+<head>
+<title>Bootstrap Example</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+</head>
+<body>
+
+	<div class="container" ng-controller="bootCampCtrl">
+		<menu menutype-attr="coffeemenu" menudesc="Coffee" addcart="addToCart(arg1)">
+			10% discount on Cappuccino
+		</menu>
+		<menu menutype-attr="foodmenu" menudesc="Food" addcart="addToCart(arg1)">
+			Burger is not available
+		</menu>
+		<menu menutype-attr="cart" menudesc="cart"></menu>
+	</div>
+	<script
+		src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular.min.js"></script>
+	<!-- One way and 2 way binding binding between parent scope and isolated scope -->
+	<script>
+		angular.module('bootCampApp', []).controller('bootCampCtrl',
+				[ '$scope', function($scope) {
+					$scope.coffeemenu = [ {
+						name : 'Cappuccino',
+						image : 'Cappuccino.jpg',
+						price : 40,
+						calories : 100
+					}, {
+						name : 'Espresso',
+						image : 'Espresso.jpg',
+						price : 40,
+						calories : 100
+					} ];
+					$scope.foodmenu = [ {
+						name : 'Pizza',
+						image : 'Cappuccino.jpg',
+						price : 40,
+						calories : 100
+					}, {
+						name : 'Burger',
+						image : 'Espresso.jpg',
+						price : 40,
+						calories : 100
+					} ];
+					$scope.cart = [];
+					
+					$scope.addToCart = function(menuitem) {
+						$scope.cart.push(menuitem);
+					}
+				} ])
+				.directive("menu", function() {
+					return {
+						scope : {
+							menutype : '=menutypeAttr',
+							menudesc : '@',
+							addcart  : '&'
+						},
+						transclude : true,
+						templateUrl : function (elem, attrs) {
+							return attrs["menudesc"] == "cart" ?
+									"cart.html" : "menu.html";
+									}
+					};
+				});
+	</script>
+</body>
+</html>
