@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="bootCampApp">
+<head>
+<title>Bootstrap Example</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script
+	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+<body ng-controller="bootCampCtrl">
+
+	<div class="container">
+		<h2>Bordered Table</h2>
+		<p>The .table-bordered class adds borders to a table:</p>
+		<table class="table table-bordered">
+			<tbody>
+				<tr ng-repeat="t in [1,2,3]">
+					<td ng-repeat="t in [1,2,3]">
+					<circle-shape color-attr="red" shape-attr="circleShape"></circle-shape>
+					<circle-shape color-attr="green" shape-attr="circleShape"></circle-shape>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<script
+		src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular.min.js"></script>
+	<!-- One way and 2 way binding binding between parent scope and isolated scope -->
+	<script>
+		angular
+				.module('bootCampApp', [])
+				.controller('bootCampCtrl', [ '$scope', function($scope) {
+					$scope.circleShape = {
+						xpos : 50,
+						ypos : 50,
+						rad : 40,
+						stroke : 'black',
+						strokewidth : 3,
+						color : 'red'
+					};
+				} ])
+				.directive(
+						'circleShape',
+						function() {
+							return {
+								scope : {
+									color : '@colorAttr',
+									shapeconf : '=shapeAttr'
+								},
+								template : '<svg height="100" width="100" onclick="alert(\'here\')">' + 
+										   '<circle ng-attr-cx="{{shapeconf.xpos}}" ng-attr-cy="{{shapeconf.ypos}}" ' + 
+										   'ng-attr-r="{{shapeconf.rad}}" ng-attr-stroke="{{shapeconf.stroke}}"'+
+										   ' ng-attr-stroke-width="{{shapeconf.strokewidth}}" ng-attr-fill="{{color}}" /></svg>'
+							};
+						});
+	</script>
+</body>
+</html>
