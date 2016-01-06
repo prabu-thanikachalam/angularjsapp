@@ -1,0 +1,11 @@
+
+<table class="table table-bordered">
+	<tbody>
+		<tr ng-repeat="drink in coffeemenu">
+			<td>{{drink.name}}</td>
+			<td><img ng-src="{{drink.image}}"></td>
+			<td>{{drink.price}}</td>
+			<td>{{drink.calories}}</td>
+		</tr>
+	</tbody>
+</table>
