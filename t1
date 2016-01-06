@@ -1,0 +1,137 @@
+<!DOCTYPE html>	
+<html lang="en" ng-app="bootCampApp">
+<head>
+<title>Coffee Shop</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+</head>
+<body>
+
+	<div class="container" ng-controller="bootCampCtrl">
+		<h2>Coffee Shop</h2>
+		<table class="table table-striped table-bordered">
+			<tr>
+				<td><b>Order by:</b></td>
+				<td><input type="text" ng-model='orderBy.name'></td>
+			</tr>
+			<tr> 
+				<td><b>Delivery Address:</b></td>
+				<td><input type="text" ng-model='orderBy.address'></td>
+			</tr>
+			<tr>
+				<td><b>Delivery Type:</b></td>
+				<td>
+					<select ng-model='deliveryType'>
+						<option value='Dine-in'>Dine-in</option>
+						<option value='Pick-up'>Pick-up</option>
+						<option value='Home-Delivery'>Home-Delivery</option>
+					</select>
+				</td>
+			</tr>
+			<tr><td><h2>Menu</h2></td></tr>
+			<tr>
+				<td>
+					<menu menutype-attr="coffeemenu" menudesc="Coffee" addcart="addToCart(arg1)">
+					10% discount on Cappuccino
+					</menu>
+				</td>
+				<td>
+					<menu menutype-attr="foodmenu" menudesc="Food" addcart="addToCart(arg1)">
+					Burger is not available
+					</menu>
+				</td>
+			<tr>
+				<td>
+				<cart-dir></cart-dir>
+				</td>
+				<td><delivery></delivery></td>
+			</tr>
+		</table>
+	</div>
+	<script
+		src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular.min.js"></script>
+	<!-- One way and 2 way binding binding between parent scope and isolated scope -->
+	<script>
+		angular.module('bootCampApp', []).controller('bootCampCtrl',
+				[ '$scope', function($scope) {
+					$scope.orderBy = {
+							username : "",
+							Address  : ""
+					}
+					$scope.deliveryType = "Dine-in";
+					$scope.coffeemenu = [ {
+						name : 'Cappuccino',
+						price : 40,
+						calories : 100
+					}, {
+						name : 'Espresso',
+						price : 40,
+						calories : 100
+					} ];
+					$scope.foodmenu = [ {
+						name : 'Pizza',
+						price : 40,
+						calories : 100
+					}, {
+						name : 'Burger',
+						price : 40,
+						calories : 100
+					} ];
+					$scope.cart = [];
+					
+					$scope.addToCart = function(menuitem) {
+						$scope.cart.push(menuitem);
+					}
+				} ])
+				.directive("menu", function() {
+					return {
+						scope : {
+							menutype : '=menutypeAttr',
+							menudesc : '@',
+							addcart  : '&'
+						},
+						transclude : true,
+						templateUrl : "menu.html"
+					};
+				}).directive("delivery", function() {
+					return {
+						scope : true,
+						templateUrl : "delivery.html"
+					};
+				}).directive("cartDir", function() {
+					return {
+						scope : true,
+						link : function(scope, element, attrs, ctrl) {
+							var listElem = angular.element("<table>");
+							listElem.addClass('table table-bordered');
+							listElem.append(angular.element("<tr>"));
+							listElem.append(angular.element("<th>").text('Name'));
+							listElem.append(angular.element("<th>").text('Price'));
+							listElem.append(angular.element("<th>").text('Calories'));									
+							listElem.append(angular.element("<tbody>"));
+							element.append(listElem);
+							scope.$watch('cart', function() {
+								var data = scope['cart'];
+								alert(data.length);
+								if (angular.isArray(data)) {
+									element.empty();
+									listElem = angular.element("<tbody>");
+									
+									for (var i = 0; i < data.length; i++) {
+										listElem.append(angular.element('<tr>'));
+										listElem.append(angular.element('<td>').text(data[i].name));
+										listElem.append(angular.element('<td>').text(data[i].price));
+										listElem.append(angular.element('<td>').text(data[i].calories));
+									}
+								}
+							}, true);
+						}
+					};
+				});
+	</script>
+</body>
+</html>
